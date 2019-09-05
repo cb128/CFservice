@@ -6,109 +6,111 @@
  * @flow
  */
 
-import React, {Fragment} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import React from 'react';
+import {Platform, Dimensions} from 'react-native';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
+import {createDrawerNavigator} from 'react-navigation-drawer';
+import SplashScreen from 'react-native-splash-screen';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
+import Login from './src/screens/Login';
+import HomeScreen from './src/screens/HomeScreen';
+import SideMenu from './src/screens/SideMenu';
+import ChangePassword from './src/screens/ChangePassword';
+import Profile from './src/screens/Profile';
 
-const App = () => {
-  return (
-    <Fragment>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </Fragment>
-  );
+const headerStyle = {
+  marginTop: Platform.OS === 'android' ? 0 : 0,
+  backgroundColor: '#ffb900',
 };
 
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+const AppStack = createStackNavigator(
+  {
+    HomeScreen: {
+      screen: HomeScreen,
+      navigationOptions: {
+        title: 'TEST',
+        headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+    ChangePassword: {
+      screen: ChangePassword,
+      navigationOptions: {
+        title: 'Đổi Mật Khẩu',
+        headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+    Profile: {
+      screen: Profile,
+      navigationOptions: {
+        title: 'Trang Cá Nhân',
+        headerStyle: {
+          marginTop: Platform.OS === 'android' ? 0 : 0,
+          backgroundColor: '#ffb900',
+          elevation: 0,
+          shadowColor: 'transparent',
+        },
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  {
+    headerLayoutPreset: 'center',
   },
-  body: {
-    backgroundColor: Colors.white,
+);
+
+const DrawerNavigator = createDrawerNavigator(
+  {
+    AppStack,
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  {
+    contentComponent: SideMenu,
+    drawerWidth: Dimensions.get('window').width - 120,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+);
+
+const AuthStack = createStackNavigator({
+  LoginScreen: {
+    screen: Login,
+    navigationOptions: {
+      headerStyle,
+      header: null,
+    },
   },
 });
 
-export default App;
+const AppContainer = createAppContainer(
+  createSwitchNavigator(
+    {
+      AuthLoading: AuthLoadingScreen,
+      App: DrawerNavigator,
+      Auth: AuthStack,
+    },
+    {
+      initialRouteName: 'AuthLoading',
+    },
+  ),
+);
+
+export default class App extends React.Component {
+  componentDidMount() {
+    SplashScreen.hide();
+    console.disableYellowBox = true;
+  }
+
+  render() {
+    return <AppContainer />;
+  }
+}
