@@ -10,49 +10,32 @@ import React from 'react';
 import {Platform, Dimensions} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
-import {createDrawerNavigator} from 'react-navigation-drawer';
+import {createBottomTabNavigator} from 'react-navigation-tabs';
 import SplashScreen from 'react-native-splash-screen';
 
 import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
 import Login from './src/screens/Login';
-import HomeScreen from './src/screens/HomeScreen';
-import SideMenu from './src/screens/SideMenu';
 import ChangePassword from './src/screens/ChangePassword';
+import ForgotPassword from './src/screens/ForgotPassword';
+import ResetPassword from './src/screens/ResetPassword';
 import Profile from './src/screens/Profile';
+import InsuranceAgreement from './src/screens/InsuranceAgreement';
+import InsurancePayment from './src/screens/InsurancePayment';
+import LoanHistory from './src/screens/LoanHistory';
+import LoanAgreement from './src/screens/LoanAgreement';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const headerStyle = {
   marginTop: Platform.OS === 'android' ? 0 : 0,
   backgroundColor: '#ffb900',
 };
 
-const AppStack = createStackNavigator(
+const InsuranceAgreementStack = createStackNavigator(
   {
-    HomeScreen: {
-      screen: HomeScreen,
+    InsuranceAgreement: {
+      screen: InsuranceAgreement,
       navigationOptions: {
-        title: 'TEST',
-        headerStyle,
-        headerTintColor: '#000',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      },
-    },
-    ChangePassword: {
-      screen: ChangePassword,
-      navigationOptions: {
-        title: 'Đổi Mật Khẩu',
-        headerStyle,
-        headerTintColor: '#000',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      },
-    },
-    Profile: {
-      screen: Profile,
-      navigationOptions: {
-        title: 'Trang Cá Nhân',
+        title: 'Insurance Agreement',
         headerStyle: {
           marginTop: Platform.OS === 'android' ? 0 : 0,
           backgroundColor: '#ffb900',
@@ -71,31 +54,191 @@ const AppStack = createStackNavigator(
   },
 );
 
-const DrawerNavigator = createDrawerNavigator(
+const InsurancePaymentStack = createStackNavigator(
   {
-    AppStack,
+    InsurancePayment: {
+      screen: InsurancePayment,
+      navigationOptions: {
+        title: 'Insurance Payment',
+        headerStyle: {
+          marginTop: Platform.OS === 'android' ? 0 : 0,
+          backgroundColor: '#ffb900',
+          elevation: 0,
+          shadowColor: 'transparent',
+        },
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
   },
   {
-    contentComponent: SideMenu,
-    drawerWidth: Dimensions.get('window').width - 120,
+    headerLayoutPreset: 'center',
   },
 );
 
-const AuthStack = createStackNavigator({
-  LoginScreen: {
-    screen: Login,
-    navigationOptions: {
-      headerStyle,
-      header: null,
+const LoanAgreementStack = createStackNavigator(
+  {
+    LoanAgreement: {
+      screen: LoanAgreement,
+      navigationOptions: {
+        title: 'Loan Agreement',
+        headerStyle: {
+          marginTop: Platform.OS === 'android' ? 0 : 0,
+          backgroundColor: '#ffb900',
+          elevation: 0,
+          shadowColor: 'transparent',
+        },
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
     },
   },
-});
+  {
+    headerLayoutPreset: 'center',
+  },
+);
+
+const LoanHistoryStack = createStackNavigator(
+  {
+    LoanHistory: {
+      screen: LoanHistory,
+      navigationOptions: {
+        title: 'Loan History',
+        headerStyle: {
+          marginTop: Platform.OS === 'android' ? 0 : 0,
+          backgroundColor: '#ffb900',
+          elevation: 0,
+          shadowColor: 'transparent',
+        },
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+  },
+  {
+    headerLayoutPreset: 'center',
+  },
+);
+
+const ProfileStack = createStackNavigator(
+  {
+    Profile: {
+      screen: Profile,
+      navigationOptions: {
+        title: 'Profile',
+        headerStyle: {
+          marginTop: Platform.OS === 'android' ? 0 : 0,
+          backgroundColor: '#ffb900',
+          elevation: 0,
+          shadowColor: 'transparent',
+        },
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+  },
+  {
+    headerLayoutPreset: 'center',
+  },
+);
+
+const TabNavigator = createBottomTabNavigator(
+  {
+    InsuranceAgreement: InsuranceAgreementStack,
+    InsurancePayment: InsurancePaymentStack,
+    LoanAgreement: LoanAgreementStack,
+    LoanHistory: LoanHistoryStack,
+    Profile: ProfileStack,
+  },
+  {
+    defaultNavigationOptions: ({navigation}) => ({
+      tabBarIcon: ({focused, horizontal, tintColor}) => {
+        const {routeName} = navigation.state;
+        let IconComponent = MaterialCommunityIcons;
+        let iconName;
+        if (routeName === 'InsuranceAgreement') {
+          iconName = `account-badge-horizontal${focused ? '' : '-outline'}`;
+        } else if (routeName === 'InsurancePayment') {
+          iconName = `ballot${focused ? '' : '-outline'}`;
+        } else if (routeName === 'LoanAgreement') {
+          iconName = `file-document-edit${focused ? '' : '-outline'}`;
+        } else if (routeName === 'LoanHistory') {
+          iconName = 'history';
+        } else if (routeName === 'Profile') {
+          iconName = 'account';
+        }
+
+        // You can return any component that you like here!
+        return <IconComponent name={iconName} size={25} color={tintColor} />;
+      },
+    }),
+    tabBarOptions: {
+      activeTintColor: '#ffb900',
+      inactiveTintColor: 'gray',
+    },
+  },
+);
+
+const AuthStack = createStackNavigator(
+  {
+    LoginScreen: {
+      screen: Login,
+      navigationOptions: {
+        headerStyle,
+        header: null,
+      },
+    },
+    ForgotPassword: {
+      screen: ForgotPassword,
+      navigationOptions: {
+        title: 'Forgot Password',
+        headerStyle: {
+          marginTop: Platform.OS === 'android' ? 0 : 0,
+          backgroundColor: '#ffb900',
+          elevation: 0,
+          shadowColor: 'transparent',
+        },
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+    ResetPassword: {
+      screen: ResetPassword,
+      navigationOptions: {
+        title: 'Reset Password',
+        headerStyle: {
+          marginTop: Platform.OS === 'android' ? 0 : 0,
+          backgroundColor: '#ffb900',
+          elevation: 0,
+          shadowColor: 'transparent',
+        },
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+  },
+  {
+    headerLayoutPreset: 'center',
+  },
+);
 
 const AppContainer = createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
-      App: DrawerNavigator,
+      App: TabNavigator,
       Auth: AuthStack,
     },
     {

@@ -86,6 +86,13 @@ class Form extends React.Component {
     }
   };
 
+  _goToForgotPasswordScreen = () => {
+    this.props.navigation.navigate({
+      routeName: 'ForgotPassword',
+      key: 'Login_Key',
+    });
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -112,6 +119,12 @@ class Form extends React.Component {
           label={'Mật khẩu'}
           isUserName={false}
         />
+
+        <TouchableOpacity
+          style={styles.forgotPass}
+          onPress={this._goToForgotPasswordScreen}>
+          <Text>Quên mật khẩu?</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText} onPress={this.handleLogin}>
@@ -140,7 +153,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#ffb900',
     width: Dimensions.get('window').width - 60,
-    marginTop: 30,
+    marginTop: 20,
     justifyContent: 'center',
     height: 50,
     borderRadius: 5,
@@ -156,6 +169,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     marginLeft: Dimensions.get('window').width / 2 - 10,
     marginTop: Dimensions.get('window').height / 2 - 10,
+  },
+  forgotPass: {
+    marginTop: 10,
+    marginRight: 30,
+    alignSelf: 'flex-end',
   },
 });
 

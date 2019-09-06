@@ -3,33 +3,15 @@ import {
   View,
   TouchableOpacity,
   Text,
+  Image,
   Alert,
   FlatList,
   Linking,
   StyleSheet,
 } from 'react-native';
-import {Icon, Image, Divider} from 'react-native-elements';
+import {Icon, Divider} from 'react-native-elements';
 import placeHolderImage from '../assets/images/img_placeholder_user.png';
-
-const arrUserData = [
-  {name: 'Nguyen Van A', image: ''},
-  {title: 'Phong Ban', value: 'Kinh Doanh'},
-  {title: 'Chuc Vu', value: 'Leader'},
-  {title: 'Ngay Vao Lam', value: '1/1/2019'},
-  {title: 'Line', value: '111'},
-  {title: 'Don Vi', value: 'CALL CENTER FSERVICES'},
-];
-
-const arrCustomerData = [
-  {name: 'Nguyen Thi B', image: '', phone: '0352501670'},
-  {title: 'Ma Khach Hang', value: 'KH123456'},
-  {title: 'CMND', value: '214234156'},
-  {title: 'Gioi Tinh', value: 'Nu'},
-  {title: 'Email', value: 'khfservices@gmail.com'},
-  {title: 'Dia Chi', value: '10A PHAN NGỮ, P. ĐA KAO, QUẬN 1'},
-  {title: 'Ngay Them Vao', value: '01/01/2019'},
-  {title: 'Ngay Cap Nhat', value: '01/09/2019'},
-];
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Profile extends React.Component {
   constructor(props) {
@@ -37,10 +19,93 @@ class Profile extends React.Component {
 
     const {navigation} = this.props;
     this.state = {
-      dataSource: navigation.getParam('arrayData', []),
-      isCustomerProfile: navigation.getParam('isCumtomer', 'false'),
+      arrUserData: [],
     };
   }
+
+  componentDidMount() {
+    // Add action to header button.
+    this.props.navigation.setParams({handleLogout: () => this.showAlert()});
+    // Get local database
+    let localData = this.getUserData();
+    if (localData) {
+      localData.then(data => {
+        this.setState({
+          arrUserData: [
+            {name: data.hoTen, image: data.hinh, phone: '0352501670'},
+            {title: 'Ma Khach Hang', value: 'KH123456'},
+            {title: 'CMND', value: '214234156'},
+            {title: 'Gioi Tinh', value: 'Nu'},
+            {title: 'Email', value: 'khfservices@gmail.com'},
+            {title: 'Dia Chi', value: '10A PHAN NGỮ, P. ĐA KAO, QUẬN 1'},
+            {title: 'Ngay Them Vao', value: '01/01/2019'},
+            {title: 'Ngay Cap Nhat', value: '01/09/2019'},
+          ],
+        });
+      });
+    }
+  }
+
+  // Navigation bar
+  static navigationOptions = ({navigation}) => {
+    return {
+      headerRight: (
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <Icon
+            name="logout"
+            type="material-community"
+            color="black"
+            underlayColor="#ffb900"
+            iconStyle={styles.logoutButton}
+            onPress={() => navigation.state.params.handleLogout()}
+          />
+        </TouchableOpacity>
+      ),
+    };
+  };
+
+  // Private method
+  showAlert = () => {
+    Alert.alert(
+      'Bạn có muốn thoát ứng dụng không?',
+      '',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            this.removeUserData();
+            this.props.navigation.navigate('Auth');
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  getUserData = async () => {
+    let userData;
+    try {
+      const retrievedItem = await AsyncStorage.getItem('loginDetails');
+      userData = JSON.parse(retrievedItem);
+    } catch (exception) {
+      console.log('Error');
+    }
+
+    return userData;
+  };
+
+  removeUserData = () => {
+    try {
+      AsyncStorage.removeItem('loginDetails');
+    } catch (exception) {}
+  };
+
+  // Render method
 
   keyExtractor = (item, index) => index.toString();
 
@@ -97,7 +162,7 @@ class Profile extends React.Component {
       <View style={styles.container}>
         <FlatList
           keyExtractor={this.keyExtractor}
-          data={this.state.dataSource}
+          data={this.state.arrUserData}
           renderItem={this.renderItem}
         />
       </View>
@@ -164,6 +229,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
   },
+  logoutButton: {marginRight: 15},
 });
 
 export default Profile;
