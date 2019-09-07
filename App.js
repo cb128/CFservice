@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {Platform, Dimensions} from 'react-native';
+import {Text, StyleSheet, Platform, Dimensions} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
@@ -25,6 +25,18 @@ import LoanHistory from './src/screens/LoanHistory';
 import LoanAgreement from './src/screens/LoanAgreement';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+const styles = StyleSheet.create({
+  tabName: {
+    textAlign: 'center',
+  },
+  inActiveTabName: {
+    color: 'grey',
+  },
+  activeTabName: {
+    color: '#ffb900',
+  },
+});
+
 const headerStyle = {
   marginTop: Platform.OS === 'android' ? 0 : 0,
   backgroundColor: '#ffb900',
@@ -35,7 +47,7 @@ const InsuranceAgreementStack = createStackNavigator(
     InsuranceAgreement: {
       screen: InsuranceAgreement,
       navigationOptions: {
-        title: 'Insurance Agreement',
+        title: 'Hợp Đồng Bảo Hiểm',
         headerStyle: {
           marginTop: Platform.OS === 'android' ? 0 : 0,
           backgroundColor: '#ffb900',
@@ -59,7 +71,7 @@ const InsurancePaymentStack = createStackNavigator(
     InsurancePayment: {
       screen: InsurancePayment,
       navigationOptions: {
-        title: 'Insurance Payment',
+        title: 'Thanh Toán Bảo Hiểm',
         headerStyle: {
           marginTop: Platform.OS === 'android' ? 0 : 0,
           backgroundColor: '#ffb900',
@@ -83,7 +95,7 @@ const LoanAgreementStack = createStackNavigator(
     LoanAgreement: {
       screen: LoanAgreement,
       navigationOptions: {
-        title: 'Loan Agreement',
+        title: 'Hợp Đồng Vay',
         headerStyle: {
           marginTop: Platform.OS === 'android' ? 0 : 0,
           backgroundColor: '#ffb900',
@@ -107,7 +119,7 @@ const LoanHistoryStack = createStackNavigator(
     LoanHistory: {
       screen: LoanHistory,
       navigationOptions: {
-        title: 'Loan History',
+        title: 'Lịch Sử Trả Nợ',
         headerStyle: {
           marginTop: Platform.OS === 'android' ? 0 : 0,
           backgroundColor: '#ffb900',
@@ -131,7 +143,7 @@ const ProfileStack = createStackNavigator(
     Profile: {
       screen: Profile,
       navigationOptions: {
-        title: 'Profile',
+        title: 'Trang Cá Nhân',
         headerStyle: {
           marginTop: Platform.OS === 'android' ? 0 : 0,
           backgroundColor: '#ffb900',
@@ -179,10 +191,34 @@ const TabNavigator = createBottomTabNavigator(
         // You can return any component that you like here!
         return <IconComponent name={iconName} size={25} color={tintColor} />;
       },
+      tabBarLabel: ({focused, horizontal, tintColor}) => {
+        const {routeName} = navigation.state;
+        let tabName;
+        if (routeName === 'InsuranceAgreement') {
+          tabName = 'Bảo Hiểm';
+        } else if (routeName === 'InsurancePayment') {
+          tabName = 'Thanh Toán';
+        } else if (routeName === 'LoanAgreement') {
+          tabName = 'Vay';
+        } else if (routeName === 'LoanHistory') {
+          tabName = 'Trả Nợ';
+        } else if (routeName === 'Profile') {
+          tabName = 'Cá Nhân';
+        }
+        return (
+          <Text
+            style={[
+              styles.tabName,
+              focused ? styles.activeTabName : styles.inActiveTabName,
+            ]}>
+            {tabName}
+          </Text>
+        );
+      },
     }),
     tabBarOptions: {
       activeTintColor: '#ffb900',
-      inactiveTintColor: 'gray',
+      inactiveTintColor: 'grey',
     },
   },
 );

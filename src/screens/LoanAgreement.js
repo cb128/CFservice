@@ -35,6 +35,7 @@ class LoanAgreement extends React.Component {
       seed: 1,
       error: null,
       refreshing: false,
+      currentOpenedItem: 0,
     };
   }
 
@@ -48,11 +49,30 @@ class LoanAgreement extends React.Component {
 
   keyExtractor = (item, index) => index.toString();
 
-  renderItem = ({item}) => (
-    <LoanListItem key={item.id} project={item} onClick={this._goToDetail} />
-  );
+  renderItem = ({item, index}) => {
+    let openSub = index === this.state.currentOpenedItem ? true : false;
+    return (
+      <LoanListItem
+        key={item.id}
+        project={item}
+        index={index}
+        openSubView={openSub}
+        onClick={this._toggleItem}
+      />
+    );
+  };
 
-  _goToDetail = () => {};
+  _toggleItem = index => {
+    if (index === this.state.currentOpenedItem) {
+      this.setState({
+        currentOpenedItem: -1,
+      });
+    } else {
+      this.setState({
+        currentOpenedItem: index,
+      });
+    }
+  };
 
   render() {
     return (
@@ -68,6 +88,7 @@ class LoanAgreement extends React.Component {
         </View>
         <FlatList
           keyExtractor={this.keyExtractor}
+          extraData={this.state}
           data={dataTemp}
           renderItem={this.renderItem}
         />
