@@ -64,7 +64,7 @@ export default class InputView extends React.Component {
   };
 
   render() {
-    let nameIcon = this.props.isUserName ? 'md-person' : 'md-key';
+    let nameIcon = this.props.isUserName ? 'md-person' : 'md-lock';
     return (
       <View style={styles.passwordViewContainer}>
         <Icon

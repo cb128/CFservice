@@ -30,7 +30,10 @@ class Form extends React.Component {
 
     if (emailParam === '' && password === '') {
       alert('Vui lòng nhập đầy đủ thông tin');
+    } else if (this.props.type !== 'Login') {
+      // Case register
     } else {
+      // Case login
       try {
         let response = await loginApp(emailParam, passwordParam);
         let responseData = await response.json();
@@ -93,6 +96,20 @@ class Form extends React.Component {
     });
   };
 
+  renderForgotPassword = () => {
+    if (this.props.type === 'Login') {
+      return (
+        <TouchableOpacity
+          style={styles.forgotPass}
+          onPress={this._goToForgotPasswordScreen}>
+          <Text>Quên mật khẩu?</Text>
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -120,11 +137,7 @@ class Form extends React.Component {
           isUserName={false}
         />
 
-        <TouchableOpacity
-          style={styles.forgotPass}
-          onPress={this._goToForgotPasswordScreen}>
-          <Text>Quên mật khẩu?</Text>
-        </TouchableOpacity>
+        {this.renderForgotPassword()}
 
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText} onPress={this.handleLogin}>

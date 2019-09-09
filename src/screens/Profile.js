@@ -32,14 +32,12 @@ class Profile extends React.Component {
       localData.then(data => {
         this.setState({
           arrUserData: [
-            {name: data.hoTen, image: data.hinh, phone: '0352501670'},
-            {title: 'Ma Khach Hang', value: 'KH123456'},
-            {title: 'CMND', value: '214234156'},
-            {title: 'Gioi Tinh', value: 'Nu'},
-            {title: 'Email', value: 'khfservices@gmail.com'},
-            {title: 'Dia Chi', value: '10A PHAN NGỮ, P. ĐA KAO, QUẬN 1'},
-            {title: 'Ngay Them Vao', value: '01/01/2019'},
-            {title: 'Ngay Cap Nhat', value: '01/09/2019'},
+            {name: data.hoTen, image: data.hinh, phone: '0351234567'},
+            {title: 'Số CMND/CCCD:', value: '1720179808'},
+            {title: 'Số điện thoại:', value: '097xxxx199'},
+            {title: 'Giới tính:', value: 'Nữ'},
+            {title: 'Ngày sinh:', value: '16/10/1985'},
+            {title: 'Tỉnh:', value: 'Thanh Hoá'},
           ],
         });
       });

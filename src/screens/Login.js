@@ -6,6 +6,8 @@ import {
   Animated,
   Keyboard,
   ScrollView,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Form from '../components/Form';
@@ -92,6 +94,10 @@ class Login extends React.Component {
     this.scroll.props.scrollToFocusedInput(reactNode);
   }
 
+  _gotoRegisterScreen = () => {
+    this.props.navigation.navigate('Register');
+  };
+
   render() {
     return (
       <KeyboardAwareScrollView style={styles.container}>
@@ -101,6 +107,12 @@ class Login extends React.Component {
             style={[styles.logo, {height: this.imageHeight}]}
           />
           <Form type="Login" />
+          <TouchableOpacity
+            style={styles.register}
+            onPress={this._gotoRegisterScreen}>
+            <Text>Chưa có tài khoản?</Text>
+            <Text style={styles.registerText}>ĐĂNG KÝ</Text>
+          </TouchableOpacity>
           <Animated.Image
             source={slogan}
             style={[styles.slogan, {height: this.imageHeight}]}
@@ -127,7 +139,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: SLOGAN_HEIGHT,
     resizeMode: 'stretch',
-    marginTop: 100,
+    marginTop: 50,
   },
   input: {
     height: 50,
@@ -137,12 +149,12 @@ const styles = StyleSheet.create({
     width: window.width - 30,
   },
   register: {
-    marginBottom: 20,
-    width: window.width - 100,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 50,
-    backgroundColor: '#ffae',
+  },
+  registerText: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

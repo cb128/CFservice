@@ -15,6 +15,7 @@ import SplashScreen from 'react-native-splash-screen';
 
 import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
 import Login from './src/screens/Login';
+import Register from './src/screens/Register';
 import ChangePassword from './src/screens/ChangePassword';
 import ForgotPassword from './src/screens/ForgotPassword';
 import ResetPassword from './src/screens/ResetPassword';
@@ -251,7 +252,23 @@ const AuthStack = createStackNavigator(
     ResetPassword: {
       screen: ResetPassword,
       navigationOptions: {
-        title: 'Reset Password',
+        title: 'Thay Đổi Mật Khẩu',
+        headerStyle: {
+          marginTop: Platform.OS === 'android' ? 0 : 0,
+          backgroundColor: '#ffb900',
+          elevation: 0,
+          shadowColor: 'transparent',
+        },
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+    Register: {
+      screen: Register,
+      navigationOptions: {
+        title: 'Thiết Lập Tài Khoản',
         headerStyle: {
           marginTop: Platform.OS === 'android' ? 0 : 0,
           backgroundColor: '#ffb900',
